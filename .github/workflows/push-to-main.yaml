@@ -34,16 +34,8 @@ jobs:
 
       - name: Smoke Test (Curl)
         run: |
-          # Replace 'localhost:5000' and the expected string with your app's specifics
-          RESPONSE=$(curl -s http://localhost:5000)
-          echo "App responded with: $RESPONSE"
-          
-          if [[ "$RESPONSE" == *"Hello World"* ]]; then
-            echo "Test Passed!"
-          else
-            echo "Test Failed! Response was not as expected."
-            exit 1
-          fi
+          curl -s http://localhost:5000 | grep -q "Hello, World!"
+          # grep -q returns an exit code of 0 if found, 1 if not.
 
       - name: Cleanup
         if: always()
