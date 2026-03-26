@@ -12,10 +12,10 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # copy the application
-COPY ./Python-Flask.py .
+COPY ./PythonFlaskExcise.py .
 
 # expose the port
 EXPOSE 5000
 
 # configure the container to run in an executed manner
-CMD ["python", "Python-Flask.py"]
+CMD ["python", "PythonFlaskExcise.py"]
