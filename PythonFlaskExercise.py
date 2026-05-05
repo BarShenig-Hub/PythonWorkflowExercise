@@ -1,7 +1,7 @@
 from flask import Flask
 
 app = Flask(__name__)
-hello_world_var = "<p>Hello, World!</p>"
+hello_world_var = "<p>HelloError, World!</p>"
 
 @app.route("/")
 def hello_world():
@@ -10,8 +10,6 @@ def hello_world():
 def number(text):
     trimmed_text = text[3:-4]
     return len(trimmed_text)
-
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
