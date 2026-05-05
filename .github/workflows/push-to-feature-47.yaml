@@ -27,9 +27,10 @@ jobs:
         run: |
           docker run -d --name test-container -p 5000:5000 test-image:latest
           sleep 5
+        
+      - name: Run pytest
+        run: docker exec test-container pytest -v
 
-      - name: Run Unit Tests
-        run: docker exec test-container python Test.py
 
       - name: Test (Curl)
         run: |
