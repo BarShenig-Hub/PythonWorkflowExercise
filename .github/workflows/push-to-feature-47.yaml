@@ -6,11 +6,38 @@ on:
       - feature-47
 
 jobs:
-  build-and-push:
+  build-test-push:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (NO PUSH)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: test-image:latest
+
+      - name: Run Container Locally
+        run: |
+          docker run -d --name test-container -p 5000:5000 test-image:latest
+          sleep 5
+
+      - name: Run Unit Tests
+        run: docker exec test-container python Test.py
+
+      - name: Test (Curl)
+        run: |
+          curl -s http://localhost:5000 | grep -q "Hello, World!"
+
+      - name: Cleanup
+        if: always()
+        run: docker rm -f test-container
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -18,31 +45,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
+      - name: Push image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/python-flask-exercise:latest
-      
-      - name: Run Container Locally for Testing
-        run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/python-flask-exercise:latest
-          docker run -d --name test-container -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/python-flask-exercise:latest
-          # Give the app a few seconds to start up
-          sleep 5
-      
-      - name: Run Unit Tests
-        run: docker exec test-container python Test.py
-
-      - name: Test (Curl)
-        run: |
-          curl -s http://localhost:5000 | grep -q "Hello, World!"
-          # grep -q returns an exit code of 0 if found, 1 if not.
-
-      - name: Cleanup
-        if: always()
-        run: docker rm -f test-container
