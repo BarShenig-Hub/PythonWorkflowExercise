@@ -11,5 +11,7 @@ def number(text):
     trimmed_text = text[3:-4]
     return len(trimmed_text)
 
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
