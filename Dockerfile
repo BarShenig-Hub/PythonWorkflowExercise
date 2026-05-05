@@ -13,7 +13,7 @@ RUN pip install -r requirements.txt
 
 # copy the application
 COPY ./PythonFlaskExercise.py .
-COPY ./Test.py .
+COPY ./test_app.py .
 
 # expose the port
 EXPOSE 5000

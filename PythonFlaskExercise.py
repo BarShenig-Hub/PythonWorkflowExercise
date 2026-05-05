@@ -1,7 +1,7 @@
 from flask import Flask
 
 app = Flask(__name__)
-hello_world_var = "<p>HelloE, World!</p>"
+hello_world_var = "<p>Hello, World!</p>"
 
 @app.route("/")
 def hello_world():
